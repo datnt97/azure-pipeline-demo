@@ -1,0 +1,39 @@
+name: 'demo.qa.$(Date:yyyy.MM.dd)-$(Rev:r)'  # demo.qa.2024.07.22-1
+
+trigger: 
+  batch: true
+  branches:
+    include:
+    # Target branch to trigger the pipeline
+    - dev     
+  paths:
+    exclude:
+    - .vsts/*
+    - azure-pipelines/README.md
+    - exclusion.dic
+
+pool: 
+  name: DNT-DEV  # Your Agent Pool
+
+variables: 
+- template: vars/global.yaml
+- template: vars/qa.yaml
+
+# Build and Deploy
+# --------------------------
+stages: 
+
+## Build Docker
+## ------------
+- stage: Build
+  displayName: Build Demo-app image (Docker)
+  jobs: 
+  - template: jobs/docker.yaml
+
+## Deploy Demo-app to QA environment
+## ------------
+- stage: Deploy
+  dependsOn: Build
+  displayName: Deploy Demo-app for QA
+  jobs: 
+  - template: jobs/rke-deploy.yaml

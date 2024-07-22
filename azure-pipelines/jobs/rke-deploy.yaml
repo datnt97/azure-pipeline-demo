@@ -1,0 +1,44 @@
+jobs:
+- job: helmDeploy
+  displayName: Deploy on K8s
+  steps:
+    - template: ../steps/checkout-self.yaml
+    - template: ../steps/debug-vars.yaml
+
+    - task: HelmDeploy@0
+      inputs:
+        connectionType: 'Kubernetes Service Connection'
+        kubernetesServiceConnection: $(rkeConnection)
+        namespace: $(rkeNamespace)
+        command: 'upgrade'
+        chartType: filepath
+        chartPath: '$(chartDirectory)'
+        chartName: $(chartName)
+        chartVersion: '$(imageTag)'
+        releaseName: $(chartName)
+        valueFile: '$(chartDirectory)/$(chartValues)'
+        arguments: '--set image.tag=$(imageTag) --create-namespace'
+    - task: DeleteFiles@1
+      displayName: Delete source on agent
+      inputs:
+        Contents: '*'
+
+- job: rollbackDeploy
+  dependsOn:
+  - helmDeploy
+  condition: failed()
+  steps:    
+  - template: ../steps/checkout-self.yaml
+  - template: ../steps/debug-vars.yaml
+
+  - task: HelmDeploy@0
+    inputs:
+      connectionType: 'Kubernetes Service Connection'
+      kubernetesServiceConnection: $(rkeConnection)
+      namespace: $(rkeNamespace)
+      command: 'rollback'
+      arguments : $(chartName)
+  - task: DeleteFiles@1
+    displayName: Delete source on agent
+    inputs:
+      Contents: '*'

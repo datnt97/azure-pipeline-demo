@@ -1,0 +1,20 @@
+
+jobs: 
+- job: PublishArtifact
+  displayName: Publish Artifact
+  steps: 
+  - template: ../steps/checkout-self.yaml
+  - template: ../steps/debug-vars.yaml
+
+  - task: HelmDeploy@0
+    displayName: Package Helm Chart
+    inputs:
+      command: 'package'
+      chartPath: $(helmChartDirectory)
+      chartVersion: $(helmChartVersion)  
+  - task: PublishBuildArtifacts@1
+    displayName: Publish Helm Chart artifact
+    inputs:
+      pathToPublish: $(artifactPathToPublish)
+      artifactName: $(artifactName)
+      publishLocation: $(artifactPublishLocation)

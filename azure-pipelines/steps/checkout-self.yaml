@@ -1,0 +1,4 @@
+steps: 
+- checkout: self
+  clean: false
+  fetchDepth: 1 # Customize for fast checkout

@@ -1,0 +1,38 @@
+name: 2.0.$(Rev:r)
+
+trigger: 
+  batch: true
+  branches:
+    include:
+    - master
+    - release/*
+  paths:
+    exclude:
+    - .vsts/*
+    - azure-pipelines/README.md
+    - exclusion.dic
+
+pool: 
+  name: DNT-DEV
+
+variables: 
+- template: vars/global.yaml
+- template: vars/prod.yaml
+
+# Build and Publish Artifact
+# --------------------------
+stages:
+  # Build Docker
+  # ------------
+  - stage: DockerStage
+    displayName: Build (Docker)
+    jobs:
+      - template: jobs/docker.yaml
+
+  ## Deploy Demo-app to Prod environment
+  ## ------------
+  - stage: Deploy
+    dependsOn: Build
+    displayName: Deploy Demo-app for Prod
+    jobs: 
+    - template: jobs/rke-deploy.yaml

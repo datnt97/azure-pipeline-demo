@@ -1,0 +1,51 @@
+steps:
+- bash: |
+    echo ''
+    echo '===== Build ====='
+    echo 'Build.BuildId:            $(Build.BuildId)'
+    echo 'Build.BuildNumber:        $(Build.BuildNumber)'
+    echo ''
+
+    echo '===== Conditions ====='
+    echo 'isMain:                   $(isMain)'
+    echo 'isTag:                    $(isTag)'
+    echo 'isProduction:             $(isProduction)'
+    echo 'isFork:                   $(isFork)'
+    echo 'isPR:                     $(isPR)'
+    echo 'isScheduled:              $(isScheduled)'
+    echo 'isTrustedCI:              $(isTrustedCI)'
+    echo ''
+
+    echo '===== RKE ACCOUNTS ====='
+    echo 'rkeConnection:            $(rkeConnection)'
+    echo 'dockerStorageAccount:     $(dockerStorageAccount)'
+    echo ''
+
+
+    echo '===== DOCKER ====='
+    echo 'dockerRegistry:           $(dockerRegistry)'
+    echo 'dockerFilePath:           $(dockerFilePath)'
+    echo 'dockerContext:            $(dockerContext)'
+    echo 'imageTag:                 $(imageTag)'
+    echo 'imageName:                $(imageName)'
+    echo 'dockerImage:              $(dockerImage)'
+    echo ''
+
+    echo '===== DEPLOYMENT ====='
+    echo 'helmChartDirectory:       $(helmChartDirectory)'
+    echo 'helmChartVersion:         $(helmChartVersion)'
+    echo ''
+
+    echo '===== ARTIFACT ====='
+    echo 'artifactPathToPublish:    $(artifactPathToPublish)'
+    echo 'artifactName:             $(artifactName)'
+    echo 'artifactPublishLocation:  $(artifactPublishLocation)'
+    echo ''
+
+    echo '===== Kubernetes ====='
+    echo 'rkeNamespace:             $(rkeNamespace)'
+    echo 'chartDirectory:           $(chartDirectory)'
+    echo 'chartName:                $(chartName)'
+    echo 'chartValues:              $(chartValues)'
+    echo ''
+  displayName: Debug - Variables

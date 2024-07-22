@@ -1,0 +1,19 @@
+variables: 
+
+  #ARM
+  rkeConnection: demo-app-prod-rke-connection
+  dockerStorageAccount: demo-app-prod-harbor-registry-account
+
+  # Docker
+  dockerRegistry: your-registry-domain.com
+  dockerFilePath: $(Build.SourcesDirectory)/path-to/Dockerfile
+  dockerContext: $(Build.SourcesDirectory)
+  imageTag: $(Build.BuildNumber)
+  imageName: demo-app
+  dockerImage: $(dockerRegistry)/$(imageName):$(imageTag)
+
+  ## Kubernetes 
+  rkeNamespace: your-namespace
+  chartDirectory: $(Build.SourcesDirectory)/charts/demo-app
+  chartName: demo-app-prod
+  chartValues: prod.yaml

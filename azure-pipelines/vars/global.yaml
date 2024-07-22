@@ -1,0 +1,39 @@
+variables: 
+
+  # Pipeline conditions
+  isMain:           ${{ eq(variables['Build.SourceBranch'], 'refs/heads/main') }}
+  isProduction:     ${{ eq(variables['Build.SourceBranch'], 'refs/heads/production') }}
+  isTag:            ${{ startsWith(variables['Build.SourceBranch'], 'refs/tags/v') }}
+  isFork:           ${{ eq(variables['System.PullRequest.IsFork'], 'True') }}
+  isPR:             ${{ eq(variables['Build.Reason'], 'PullRequest') }}
+  isScheduled:      ${{ eq(variables['Build.Reason'], 'Schedule') }}
+  isTrustedCI:      ${{ and( eq(variables.isFork,'False'), eq(variables.isPR,'False'), eq(variables.isScheduled,'False') ) }}
+  deployMain:       ${{ and( eq(variables.isMain,'True'), eq(variables.isTrustedCI,'True') ) }}
+
+  #  To be overwritten by dev.yaml, test.yaml, and prod.yaml.
+  ## RKE
+  rkeConnection: __unset__
+  dockerStorageAccount: __unset__
+
+  ## Docker
+  dockerRegistry: __unset__
+  dockerFilePath: __unset__
+  dockerContext: __unset__
+  imageTag: __unset__
+  imageName: __unset__
+  dockerImage: __unset__
+
+  ## Kubernetes 
+  rkeNamespace: __unset__
+  chartDirectory: __unset__
+  chartName: __unset__
+  chartValues: __unset__
+
+  ## Helm
+  helmChartDirectory: __unset__
+  helmChartVersion: __unset__
+
+  ## Artifact
+  artifactPathToPublish: __unset__
+  artifactName: __unset__
+  artifactPublishLocation: __unset__
